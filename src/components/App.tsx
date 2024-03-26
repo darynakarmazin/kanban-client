@@ -148,10 +148,12 @@ function App() {
         </button>
       </form>
 
-      <div className="kanban-data">
-        <h1>{`Kanban board name: ${kanbanData?.name}`}</h1>
-        <p>{`Kanban board id: ${kanbanData?.id}`}</p>
-      </div>
+      {kanbanData && (
+        <div className="kanban-data">
+          <h1>{`Kanban board name: ${kanbanData?.name}`}</h1>
+          <p>{`Kanban board id: ${kanbanData?.id}`}</p>
+        </div>
+      )}
 
       <ul className="board-list">
         {boards.map((board) => (
