@@ -1,10 +1,10 @@
 import React, { useRef, useState } from "react";
 import { Board, BoardItem, Kanban } from "../types/boardsType";
-import { kanban } from "../data";
+import { initialKanban, kanban } from "../data";
 
 function App() {
   const [kanbanData, setKanbanData] = useState<Kanban | null>(null);
-  const [boards, setBoards] = useState<Board[]>([]);
+  const [boards, setBoards] = useState<Board[]>(initialKanban);
   const [currentBoard, setCurrentBoard] = useState<Board | null>(null);
   const [currentItem, setCurrentItem] = useState<BoardItem | null>(null);
 
