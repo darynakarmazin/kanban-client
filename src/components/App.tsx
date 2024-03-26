@@ -1,16 +1,5 @@
 import React, { useState } from "react";
-
-interface BoardItem {
-  id: string;
-  title: string;
-  description?: string;
-}
-
-interface Board {
-  id: string;
-  title: string;
-  items: BoardItem[];
-}
+import { Board, BoardItem } from "../types/boardsType";
 
 function App() {
   const [boards, setBoards] = useState<Board[]>([
@@ -20,17 +9,17 @@ function App() {
       items: [
         {
           id: "1abc",
-          title: "Перша таска",
+          title: "1 - Перша таска",
           description: "Треба зробити це таким чином",
         },
         {
           id: "2abc",
-          title: "Інша таска",
+          title: "2 - Інша таска",
           description: "Треба зробити це таким чином",
         },
         {
           id: "3abc",
-          title: "Легка таска",
+          title: "3 - Легка таска",
           description: "Треба зробити це таким чином",
         },
       ],
@@ -38,7 +27,6 @@ function App() {
     { id: "2qwe", title: "In Progress", items: [] },
     { id: "3qwe", title: "Done", items: [] },
   ]);
-
   const [currentBoard, setCurrentBoard] = useState<Board | null>(null);
   const [currentItem, setCurrentItem] = useState<BoardItem | null>(null);
 
@@ -70,38 +58,31 @@ function App() {
     e.preventDefault();
     if (currentBoard === null || currentItem === null) return;
 
-    const updatedBoards = boards.map((b) => {
-      if (b.id === board.id) {
-        const updatedBoard: Board = { ...b };
-        const currentIndex = currentBoard.items.indexOf(currentItem);
-        const dropIndex = updatedBoard.items.indexOf(item);
-        updatedBoard.items.splice(currentIndex, 1);
-        updatedBoard.items.splice(dropIndex + 1, 0, currentItem);
-        return updatedBoard;
-      }
-      if (b.id === currentBoard.id) {
-        return { ...b, items: currentBoard.items };
-      }
-      return b;
-    });
-    setBoards(updatedBoards);
+    if (board.items.length !== 0) {
+      const currentIndex = currentBoard.items.indexOf(currentItem);
+      currentBoard.items.splice(currentIndex, 1);
+      const dropIndex = board.items.indexOf(item);
+      board.items.splice(dropIndex + 1, 0, currentItem);
+    }
+    (e.target as HTMLElement).style.boxShadow = "none";
   };
 
   const dropCardHandler = (e: React.MouseEvent, board: Board) => {
     e.preventDefault();
     if (currentBoard === null || currentItem === null) return;
 
-    board.items.push(currentItem);
-    const currentIndex = currentBoard.items.indexOf(currentItem);
-    const updatedBoard = { ...currentBoard }; // Define updatedBoard here
-    updatedBoard.items.splice(currentIndex, 1);
-    setBoards((prevBoards) =>
-      prevBoards.map((b) => {
+    if (board.items.length === 0) {
+      board.items.push(currentItem);
+      const currentIndex = currentBoard.items.indexOf(currentItem);
+      currentBoard.items.splice(currentIndex, 1);
+    }
+    setBoards(
+      boards.map((b) => {
         if (b.id === board.id) {
           return board;
         }
         if (b.id === currentBoard.id) {
-          return updatedBoard;
+          return currentBoard;
         }
         return b;
       })
