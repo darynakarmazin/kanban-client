@@ -69,7 +69,7 @@ button {
   justify-content: space-around;
 }
 
-.board__list {
+.board-list {
   display: flex;
   height: 70%;
 }
@@ -81,11 +81,12 @@ button {
   flex-basis: calc((100% - (8px * 2)) / 3);
 }
 
-.item-list {
-  width: 100%;
+.board-title {
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
-.board {
+.board-content {
   min-width: 280px;
   height: 100%;
   border: 5px solid grey;
@@ -98,9 +99,8 @@ button {
   align-items: center;
 }
 
-.board__title {
-  font-size: 1.5rem;
-  font-weight: 700;
+.item-list {
+  width: 100%;
 }
 
 .item {

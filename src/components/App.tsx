@@ -126,12 +126,12 @@ function App() {
   return (
     <div className="container">
       <input type="text" />
-      <ul className="board__list">
+      <ul className="board-list">
         {boards.map((board) => (
-          <li key={board.id} className="board__item">
-            <h2>{board.title}</h2>
+          <li key={board.id} className="board-item">
+            <h2 className="board-title">{board.title}</h2>
             <div
-              className="board"
+              className="board-content"
               onDragOver={(e) => dragOverHandler(e)}
               onDropCapture={(e) => dropCardHandler(e, board)}
             >
