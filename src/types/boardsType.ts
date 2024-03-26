@@ -1,3 +1,9 @@
+export interface Kanban {
+  id: string;
+  name: string;
+  boards: Board[];
+}
+
 export interface BoardItem {
   id: string;
   title: string;

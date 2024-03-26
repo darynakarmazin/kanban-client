@@ -91,11 +91,16 @@ button {
   }
 }
 
+.kanban-data {
+  margin-left: auto;
+  text-align: right;
+}
+
 .board-list {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  height: 80%;
+  height: 70%;
 }
 
 .board-item {

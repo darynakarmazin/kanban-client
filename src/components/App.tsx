@@ -1,8 +1,9 @@
 import React, { useRef, useState } from "react";
-import { Board, BoardItem } from "../types/boardsType";
+import { Board, BoardItem, Kanban } from "../types/boardsType";
 import { kanban } from "../data";
 
 function App() {
+  const [kanbanData, setKanbanData] = useState<Kanban | null>(null);
   const [boards, setBoards] = useState<Board[]>([]);
   const [currentBoard, setCurrentBoard] = useState<Board | null>(null);
   const [currentItem, setCurrentItem] = useState<BoardItem | null>(null);
@@ -16,12 +17,13 @@ function App() {
   const handleLoadButtonClick = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (kanbanId.trim() !== "") {
-      const newBoards = getBoardById(kanbanId);
-      if (newBoards) {
+      const newBoard = getBoardById(kanbanId);
+      if (newBoard) {
         setKanbanId("");
         setCurrentBoard(null);
         setCurrentBoard(null);
-        setBoards(newBoards);
+        setBoards(newBoard.boards);
+        setKanbanData(newBoard);
         formRef.current?.reset();
       } else {
         alert("Board not found!");
@@ -31,7 +33,7 @@ function App() {
 
   function getBoardById(hachId: string) {
     const kanbanItem = kanban.find((item) => item.id === hachId);
-    return kanbanItem?.boards;
+    return kanbanItem;
   }
 
   const dragOverHandler = (e: React.DragEvent) => {
@@ -145,6 +147,11 @@ function App() {
           Load
         </button>
       </form>
+
+      <div className="kanban-data">
+        <h1>{`Kanban board name: ${kanbanData?.name}`}</h1>
+        <p>{`Kanban board id: ${kanbanData?.id}`}</p>
+      </div>
 
       <ul className="board-list">
         {boards.map((board) => (
