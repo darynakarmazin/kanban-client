@@ -125,7 +125,17 @@ function App() {
 
   return (
     <div className="container">
-      <input type="text" />
+      <form className="search-form">
+        <input
+          className="search-input"
+          type="text"
+          placeholder="Enter a board ID here..."
+        />
+        <button className="search-btn" type="submit">
+          Load
+        </button>
+      </form>
+
       <ul className="board-list">
         {boards.map((board) => (
           <li key={board.id} className="board-item">

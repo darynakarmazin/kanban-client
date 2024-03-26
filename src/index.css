@@ -69,16 +69,39 @@ button {
   justify-content: space-around;
 }
 
+.search-form {
+  display: flex;
+  gap: 18px;
+  width: 100%;
+  height: 60px;
+
+  .search-input {
+    flex: 1;
+    border: 5px solid grey;
+    border-radius: 12px;
+    padding: 8px 28px;
+  }
+
+  .search-btn {
+    border: 5px solid grey;
+    border-radius: 12px;
+    padding: 8px 28px;
+    background-color: transparent;
+  }
+}
+
 .board-list {
   display: flex;
-  height: 70%;
+  justify-content: space-between;
+  width: 100%;
+  height: 80%;
 }
 
 .board-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex-basis: calc((100% - (8px * 2)) / 3);
+  flex-basis: calc((100% - (18px * 2)) / 3);
 }
 
 .board-title {
@@ -87,6 +110,7 @@ button {
 }
 
 .board-content {
+  width: 100%;
   min-width: 280px;
   height: 100%;
   border: 5px solid grey;
@@ -106,7 +130,7 @@ button {
 .item {
   width: 100%;
   height: 120px;
-  border: 2px solid lightpink;
+  border: 5px solid grey;
   padding: 10px;
   border-radius: 6px;
   margin: 5px 0;
@@ -121,7 +145,7 @@ button {
   align-items: center;
   width: 100%;
   height: 120px;
-  border: 2px solid lightpink;
+  border: 5px solid grey;
   padding: 10px;
   border-radius: 6px;
   margin: 5px 0;
