@@ -98,6 +98,31 @@ function App() {
     (e.target as HTMLElement).style.boxShadow = "none";
   };
 
+  const handleAddCard = (board: Board) => {
+    const title = prompt("Enter title for the new card:");
+    const description = prompt("Enter description for the new card:");
+
+    if (title && description) {
+      const newCard: BoardItem = {
+        id: Math.random().toString(36).substr(2, 9),
+        title: title,
+        description: description,
+      };
+
+      setBoards(
+        boards.map((b) => {
+          if (b.id === board.id) {
+            return {
+              ...b,
+              items: [...b.items, newCard],
+            };
+          }
+          return b;
+        })
+      );
+    }
+  };
+
   return (
     <div className="container">
       <input type="text" />
@@ -110,7 +135,7 @@ function App() {
               onDragOver={(e) => dragOverHandler(e)}
               onDropCapture={(e) => dropCardHandler(e, board)}
             >
-              <ul>
+              <ul className="item-list">
                 {board.items?.map((item) => (
                   <li
                     key={item.id}
@@ -127,6 +152,11 @@ function App() {
                   </li>
                 ))}
               </ul>
+              {board.title === "ToDo" && (
+                <div className="add-card" onClick={() => handleAddCard(board)}>
+                  +
+                </div>
+              )}
             </div>
           </li>
         ))}
