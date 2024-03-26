@@ -7,8 +7,6 @@ function App() {
   const [currentBoard, setCurrentBoard] = useState<Board | null>(null);
   const [currentItem, setCurrentItem] = useState<BoardItem | null>(null);
 
-  console.log(boards);
-
   const [kanbanId, setKanbanId] = useState("");
   const handleBoardIdInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKanbanId(e.target.value);
