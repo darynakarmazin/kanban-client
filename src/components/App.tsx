@@ -57,25 +57,33 @@ function App() {
   const dropHandler = (e: React.MouseEvent, board: Board, item: BoardItem) => {
     e.preventDefault();
     if (currentBoard === null || currentItem === null) return;
+    const currentIndex = currentBoard.items.indexOf(currentItem);
+    currentBoard.items.splice(currentIndex, 1);
+    const dropIndex = board.items.indexOf(item);
+    board.items.splice(dropIndex + 1, 0, currentItem);
 
-    if (board.items.length !== 0) {
-      const currentIndex = currentBoard.items.indexOf(currentItem);
-      currentBoard.items.splice(currentIndex, 1);
-      const dropIndex = board.items.indexOf(item);
-      board.items.splice(dropIndex + 1, 0, currentItem);
-    }
+    setBoards(
+      boards.map((b) => {
+        if (b.id === board.id) {
+          return board;
+        }
+        if (b.id === currentBoard.id) {
+          return currentBoard;
+        }
+        return b;
+      })
+    );
     (e.target as HTMLElement).style.boxShadow = "none";
   };
 
   const dropCardHandler = (e: React.MouseEvent, board: Board) => {
     e.preventDefault();
+    e.stopPropagation();
     if (currentBoard === null || currentItem === null) return;
+    board.items.push(currentItem);
+    const currentIndex = currentBoard.items.indexOf(currentItem);
+    currentBoard.items.splice(currentIndex, 1);
 
-    if (board.items.length === 0) {
-      board.items.push(currentItem);
-      const currentIndex = currentBoard.items.indexOf(currentItem);
-      currentBoard.items.splice(currentIndex, 1);
-    }
     setBoards(
       boards.map((b) => {
         if (b.id === board.id) {
@@ -100,7 +108,7 @@ function App() {
             <div
               className="board"
               onDragOver={(e) => dragOverHandler(e)}
-              onDrop={(e) => dropCardHandler(e, board)}
+              onDropCapture={(e) => dropCardHandler(e, board)}
             >
               <ul>
                 {board.items?.map((item) => (
