@@ -1,34 +1,35 @@
 import React, { useState } from "react";
 import { Board, BoardItem } from "../types/boardsType";
+import { kanban } from "../data";
 
 function App() {
-  const [boards, setBoards] = useState<Board[]>([
-    {
-      id: "1qwe",
-      title: "ToDo",
-      items: [
-        {
-          id: "1abc",
-          title: "1 - Перша таска",
-          description: "Треба зробити це таким чином",
-        },
-        {
-          id: "2abc",
-          title: "2 - Інша таска",
-          description: "Треба зробити це таким чином",
-        },
-        {
-          id: "3abc",
-          title: "3 - Легка таска",
-          description: "Треба зробити це таким чином",
-        },
-      ],
-    },
-    { id: "2qwe", title: "In Progress", items: [] },
-    { id: "3qwe", title: "Done", items: [] },
-  ]);
+  const [boards, setBoards] = useState<Board[]>([]);
   const [currentBoard, setCurrentBoard] = useState<Board | null>(null);
   const [currentItem, setCurrentItem] = useState<BoardItem | null>(null);
+
+  console.log(boards);
+
+  const [kanbanId, setKanbanId] = useState("");
+  const handleBoardIdInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKanbanId(e.target.value);
+  };
+
+  const handleLoadButtonClick = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (kanbanId.trim() !== "") {
+      const newBoards = getBoardById(kanbanId);
+      if (newBoards) {
+        setBoards(newBoards);
+      } else {
+        alert("Board not found!");
+      }
+    }
+  };
+
+  function getBoardById(hachId: string) {
+    const kanbanItem = kanban.find((item) => item.id === hachId);
+    return kanbanItem?.boards;
+  }
 
   const dragOverHandler = (e: React.DragEvent) => {
     e.preventDefault();
@@ -125,8 +126,10 @@ function App() {
 
   return (
     <div className="container">
-      <form className="search-form">
+      <form onSubmit={handleLoadButtonClick} className="search-form">
         <input
+          onChange={handleBoardIdInputChange}
+          value={kanbanId}
           className="search-input"
           type="text"
           placeholder="Enter a board ID here..."
