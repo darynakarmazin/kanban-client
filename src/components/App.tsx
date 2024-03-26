@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Board, BoardItem } from "../types/boardsType";
 import { kanban } from "../data";
 
@@ -7,6 +7,7 @@ function App() {
   const [currentBoard, setCurrentBoard] = useState<Board | null>(null);
   const [currentItem, setCurrentItem] = useState<BoardItem | null>(null);
 
+  const formRef = useRef<HTMLFormElement>(null);
   const [kanbanId, setKanbanId] = useState("");
   const handleBoardIdInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKanbanId(e.target.value);
@@ -17,7 +18,11 @@ function App() {
     if (kanbanId.trim() !== "") {
       const newBoards = getBoardById(kanbanId);
       if (newBoards) {
+        setKanbanId("");
+        setCurrentBoard(null);
+        setCurrentBoard(null);
         setBoards(newBoards);
+        formRef.current?.reset();
       } else {
         alert("Board not found!");
       }
@@ -124,7 +129,11 @@ function App() {
 
   return (
     <div className="container">
-      <form onSubmit={handleLoadButtonClick} className="search-form">
+      <form
+        onSubmit={handleLoadButtonClick}
+        className="search-form"
+        ref={formRef}
+      >
         <input
           onChange={handleBoardIdInputChange}
           value={kanbanId}
