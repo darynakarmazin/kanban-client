@@ -1,6 +1,6 @@
 export const kanban = [
   {
-    id: "Qwerty+1234",
+    hashId: "Qwerty+1234",
     name: "Моя тестова дошка",
     boards: [
       {
@@ -29,7 +29,7 @@ export const kanban = [
     ],
   },
   {
-    id: "1111",
+    hashId: "1111",
     name: "1111",
     boards: [
       {

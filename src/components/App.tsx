@@ -31,8 +31,8 @@ function App() {
     }
   };
 
-  function getBoardById(hachId: string) {
-    const kanbanItem = kanban.find((item) => item.id === hachId);
+  function getBoardById(targetId: string) {
+    const kanbanItem = kanban.find((item) => item.hashId === targetId);
     return kanbanItem;
   }
 
@@ -151,7 +151,7 @@ function App() {
       {kanbanData && (
         <div className="kanban-data">
           <h1>{`Kanban board name: ${kanbanData?.name}`}</h1>
-          <p>{`Kanban board id: ${kanbanData?.id}`}</p>
+          <p>{`Kanban board id: ${kanbanData?.hashId}`}</p>
         </div>
       )}
 

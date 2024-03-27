@@ -1,5 +1,5 @@
 export interface Kanban {
-  id: string;
+  hashId: string;
   name: string;
   boards: Board[];
 }
