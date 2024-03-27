@@ -50,11 +50,7 @@ export const kanban = [
 ];
 
 export const initialKanban = [
-  {
-    id: "01",
-    title: "ToDo",
-    items: [],
-  },
+  { id: "01", title: "ToDo", items: [] },
   { id: "02", title: "In Progress", items: [] },
   { id: "03", title: "Done", items: [] },
 ];
