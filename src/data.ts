@@ -1,5 +1,6 @@
 export const kanban = [
   {
+    id: "1",
     hashId: "Qwerty+1234",
     name: "Моя тестова дошка",
     boards: [
@@ -29,6 +30,7 @@ export const kanban = [
     ],
   },
   {
+    id: "2",
     hashId: "1111",
     name: "1111",
     boards: [
@@ -50,7 +52,17 @@ export const kanban = [
 ];
 
 export const initialKanban = [
-  { id: "01", title: "ToDo", items: [] },
+  {
+    id: "01",
+    title: "ToDo",
+    items: [
+      {
+        id: "1abc",
+        title: "1 - Перша таска",
+        description: "Треба зробити це таким чином",
+      },
+    ],
+  },
   { id: "02", title: "In Progress", items: [] },
   { id: "03", title: "Done", items: [] },
 ];

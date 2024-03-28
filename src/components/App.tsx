@@ -1,15 +1,29 @@
 import React, { useRef, useState } from "react";
-import { Board, BoardItem, Kanban } from "../types/boardsType";
-import { initialKanban, kanban } from "../data";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setKanbanData,
+  setCurrentBoard,
+  setCurrentItem,
+  setBoards,
+} from "../redux/kanbanSlice";
+import { RootState } from "../redux/store";
+import { Board, BoardItem } from "../types/boardsType";
+import { kanban } from "../data";
 
 function App() {
-  const [kanbanData, setKanbanData] = useState<Kanban | null>(null);
-  const [boards, setBoards] = useState<Board[]>(initialKanban);
-  const [currentBoard, setCurrentBoard] = useState<Board | null>(null);
-  const [currentItem, setCurrentItem] = useState<BoardItem | null>(null);
+  const dispatch = useDispatch();
+  const kanbanData = useSelector((state: RootState) => state.kanban.kanbanData);
+  const boards = useSelector((state: RootState) => state.kanban.boards);
+  const currentBoard = useSelector(
+    (state: RootState) => state.kanban.currentBoard
+  );
+  const currentItem = useSelector(
+    (state: RootState) => state.kanban.currentItem
+  );
 
   const formRef = useRef<HTMLFormElement>(null);
   const [kanbanId, setKanbanId] = useState("");
+
   const handleBoardIdInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKanbanId(e.target.value);
   };
@@ -20,10 +34,10 @@ function App() {
       const newBoard = getBoardById(kanbanId);
       if (newBoard) {
         setKanbanId("");
-        setCurrentBoard(null);
-        setCurrentBoard(null);
-        setBoards(newBoard.boards);
-        setKanbanData(newBoard);
+        dispatch(setCurrentBoard(null));
+        dispatch(setCurrentItem(null));
+        dispatch(setBoards(newBoard.boards));
+        dispatch(setKanbanData(newBoard));
         formRef.current?.reset();
       } else {
         alert("Board not found!");
@@ -52,55 +66,102 @@ function App() {
     board: Board,
     item: BoardItem
   ) => {
-    setCurrentBoard(board);
-    setCurrentItem(item);
+    dispatch(setCurrentBoard(board));
+    dispatch(setCurrentItem(item));
   };
 
   const dragEndHandler = (e: React.DragEvent) => {
     (e.target as HTMLElement).style.boxShadow = "none";
   };
 
-  const dropHandler = (e: React.MouseEvent, board: Board, item: BoardItem) => {
+  const dropHandler = (
+    e: React.MouseEvent,
+    board: Board,
+    droppedItem: BoardItem
+  ) => {
     e.preventDefault();
-    if (currentBoard === null || currentItem === null) return;
+    if (!currentBoard || !currentItem) return;
+
     const currentIndex = currentBoard.items.indexOf(currentItem);
-    currentBoard.items.splice(currentIndex, 1);
-    const dropIndex = board.items.indexOf(item);
+    if (currentIndex !== -1) {
+      const updatedCurrentBoard = {
+        ...currentBoard,
+        items: currentBoard.items.filter((item) => item.id !== currentItem.id),
+      };
+      dispatch(
+        setBoards(
+          boards.map((b) =>
+            b.id === currentBoard.id ? updatedCurrentBoard : b
+          )
+        )
+      );
+    }
+
+    const dropIndex = board.items.indexOf(droppedItem);
     board.items.splice(dropIndex + 1, 0, currentItem);
 
-    setBoards(
-      boards.map((b) => {
-        if (b.id === board.id) {
-          return board;
-        }
-        if (b.id === currentBoard.id) {
-          return currentBoard;
-        }
-        return b;
-      })
+    dispatch(
+      setBoards(
+        boards.map((b) => {
+          if (b.id === board.id) {
+            return board;
+          }
+          return b;
+        })
+      )
     );
+
+    // Додайте поточний елемент на нове місце
+    dispatch(
+      setBoards(
+        boards.map((b) => {
+          if (b.id === board.id) {
+            return {
+              ...b,
+              items: [
+                ...b.items.slice(0, dropIndex + 1),
+                currentItem,
+                ...b.items.slice(dropIndex + 1),
+              ],
+            };
+          }
+          return b;
+        })
+      )
+    );
+
     (e.target as HTMLElement).style.boxShadow = "none";
   };
 
   const dropCardHandler = (e: React.MouseEvent, board: Board) => {
     e.preventDefault();
     e.stopPropagation();
-    if (currentBoard === null || currentItem === null) return;
-    board.items.push(currentItem);
-    const currentIndex = currentBoard.items.indexOf(currentItem);
-    currentBoard.items.splice(currentIndex, 1);
+    if (!currentBoard || !currentItem) return;
 
-    setBoards(
-      boards.map((b) => {
-        if (b.id === board.id) {
-          return board;
-        }
-        if (b.id === currentBoard.id) {
-          return currentBoard;
-        }
-        return b;
-      })
+    const updatedTargetBoard = {
+      ...board,
+      items: [...board.items, currentItem],
+    };
+
+    const updatedCurrentBoard = {
+      ...currentBoard,
+      items: currentBoard.items.filter((item) => item.id !== currentItem.id),
+    };
+
+    dispatch(
+      setBoards(
+        boards.map((b) => {
+          if (b.id === updatedTargetBoard.id) {
+            return updatedTargetBoard;
+          }
+          if (b.id === updatedCurrentBoard.id) {
+            return updatedCurrentBoard;
+          }
+          return b;
+        })
+      )
     );
+
     (e.target as HTMLElement).style.boxShadow = "none";
   };
 
@@ -115,16 +176,12 @@ function App() {
         description: description,
       };
 
-      setBoards(
-        boards.map((b) => {
-          if (b.id === board.id) {
-            return {
-              ...b,
-              items: [...b.items, newCard],
-            };
-          }
-          return b;
-        })
+      dispatch(
+        setBoards(
+          boards.map((b) =>
+            b.id === board.id ? { ...b, items: [...b.items, newCard] } : b
+          )
+        )
       );
     }
   };
